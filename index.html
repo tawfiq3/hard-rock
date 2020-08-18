@@ -274,7 +274,8 @@
                 </div>
                 <!-- ./ single result -->
 
-                <pre id="lyricplc" class="lyric text-white"></pre>
+                <h2 id="title" class="text-success mb-4 text-center"></h2>
+                <pre id="lyricplc" class="lyric text-white text-center"></pre>
             </div>
 
 
@@ -305,6 +306,13 @@
                         song[i].innerText = songName;
                         artist[i].innerText = artistNam;
                         const lyrics = lyricsbtn[i]
+
+                        function displayTitle(){
+                                const titlesong = data.data[i].title_short;
+                                const titleShown = document.getElementById("title");
+                                titleShown.innerText = titlesong;
+                        }
+
                         lyrics.addEventListener("click",function(){
                             fetch( `https://private-anon-5402ece78c-lyricsovh.apiary-proxy.com/v1/${artistNam}/${songName}`)
                             .then(res => res.json())
@@ -313,7 +321,9 @@
                                 const lyricsPlace = document.getElementById("lyricplc");
                                 lyricsPlace.innerText = ly;
 
+                                displayTitle();
 
+                                
                             })
                         })
                         }
