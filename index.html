@@ -169,7 +169,7 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button  class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
@@ -181,7 +181,7 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
@@ -192,7 +192,7 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
@@ -203,7 +203,7 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
@@ -214,7 +214,7 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
@@ -225,7 +225,7 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
@@ -236,7 +236,7 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
@@ -247,7 +247,7 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
@@ -258,7 +258,7 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
@@ -269,10 +269,12 @@
                         <p class="author lead">Album by <span class="artist"></span></p>
                     </div>
                     <div class="col-md-3 text-md-right text-center">
-                        <button class="btn btn-success">Get Lyrics</button>
+                        <button class="btn lyricsBtn btn-success">Get Lyrics</button>
                     </div>
                 </div>
                 <!-- ./ single result -->
+
+                <pre id="lyricplc" class="lyric text-white"></pre>
             </div>
 
 
@@ -285,29 +287,41 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
-        const search = document.getElementById("searchBtn").addEventListener("click",function(){
-            const songTitle = document.getElementsByClassName("lyrics-name");
-            const song = Array.prototype.slice.call(songTitle); 
-            const artistName = document.getElementsByClassName("artist");
-            const artist = Array.prototype.slice.call(artistName); 
-            const searchBox = document.getElementById("searchBox").value;
-            const result = document.getElementById("suggestion");
-            result.style.display = 'block'
-            fetch(`https://api.lyrics.ovh/suggest/${searchBox}`)
-            .then(res => res.json())
-            .then(data => {   
-                for (let i = 0; i < 10; i++) {
-                    const songName = data.data[i].title;
-                    const artistNam = data.data[i].artist.name;
-                    song[i].innerText = songName;
-                    artist[i].innerText = artistNam;
+            const lyricsbtn = document.getElementsByClassName("lyricsBtn")
+            const search = document.getElementById("searchBtn").addEventListener("click",function(){ 
+                const songTitle = document.getElementsByClassName("lyrics-name");
+                const song = Array.prototype.slice.call(songTitle); 
+                const artistName = document.getElementsByClassName("artist");
+                const artist = Array.prototype.slice.call(artistName); 
+                const searchBox = document.getElementById("searchBox").value;              
+                const result = document.getElementById("suggestion");
+                result.style.display = 'block'
+                fetch(`https://api.lyrics.ovh/suggest/${searchBox}`)
+                .then(res => res.json())
+                .then(data => {   
+                    for (let i = 0; i < 10; i++) {
+                        const songName = data.data[i].title;
+                        const artistNam = data.data[i].artist.name;
+                        song[i].innerText = songName;
+                        artist[i].innerText = artistNam;
+                        const lyrics = lyricsbtn[i]
+                        lyrics.addEventListener("click",function(){
+                            fetch( `https://private-anon-5402ece78c-lyricsovh.apiary-proxy.com/v1/${artistNam}/${songName}`)
+                            .then(res => res.json())
+                            .then(data =>{
+                                const ly = data.lyrics;
+                                const lyricsPlace = document.getElementById("lyricplc");
+                                lyricsPlace.innerText = ly;
 
 
-                    }
-                                
-               
+                            })
+                        })
+                        }
+                    })
+                                        
+                
+            
             })
-})
     </script>
 
     <!-- Custom Script Here -->
